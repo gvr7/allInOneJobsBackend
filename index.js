@@ -9,7 +9,7 @@ app.use(cors())
 
 
 try{
-app.listen(2000,() => console.log('Server connected...'))
+app.listen(process.env.PORT || 2000,() => console.log('Server connected...'))
 mongoose.connect("mongodb+srv://venkatesh:venkatesh@cluster0.eyze3ag.mongodb.net/?retryWrites=true&w=majority").then(() => console.log("db connected"))
   }catch(err){
   console.log(err)
