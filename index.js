@@ -1,48 +1,46 @@
 const express = require('express')
 const mongoose = require("mongoose")
-const cors = require('cors')
-const Schema = require("./model.js")
+const InterviewData = require('./model')
 const app = express()
-
+const cors = require('cors')
 app.use(express.json())
 app.use(cors())
 
-
 try{
-app.listen(process.env.PORT || 2000,() => console.log('Server connected...'))
-mongoose.connect("mongodb+srv://venkatesh:venkatesh@cluster0.eyze3ag.mongodb.net/?retryWrites=true&w=majority").then(() => console.log("db connected"))
-  }catch(err){
-  console.log(err)
-}
-
-try{
-  app.post("/jobs",async(req,res) => {
-  const {imageUrl,branches,title,category,description,link,lastDate,experience,company} =await req.body
-  const newData =await new Schema({imageUrl,branches,title,category,description,link,lastDate,experience,company})
-  await newData.save()
-  res.send("success")
-})
+    mongoose.connect("mongodb+srv://venkatesh:venkatesh@cluster0.epav24e.mongodb.net/?retryWrites=true&w=majority").then(() => console.log("db connected..."))
+    
+    app.listen(process.env.PORT || 2000 ,() => console.log("server created..."))
 }catch(err){
-  console.log(err)
+    console.log(err)
 }
 
-try{
-  app.get("/jobs",async(req,res) => {
-    const allData = await Schema.find()
-    return res.json(allData)
-})
-}catch(err){
-  console.log(err)
-}
 
-try{
-  app.get("/jobs/:id",async(req,res) => {
-    const Data = await Schema.findById(req.params.id)
-    return res.json(Data)
-})
-}catch(err){
-  console.log(err)
-}
-app.get("/",(req,res)=>{
-  res.send("hello")
-})
+app.get('/',(req,res) => {
+    res.send('<h1>hello world </h1>')
+  })
+
+  app.post('/add', async(req,res) => {
+    console.log("function triggered..")
+    console.log(req.body)
+    const {name,company,questions} = req.body
+    try{
+      const newData = new InterviewData({company,name,questions})
+      console.log(newData)
+     await newData.save();
+      
+      return res.send("success")
+    }catch(err){
+   console.log(err)
+    }
+  })
+  
+
+  app.get('/get',async(req,res) => {
+    try{
+      const allData = await InterviewData.find()
+      return res.json(allData)
+    }catch(err){
+      console.log(err)
+    }
+  })
+  
